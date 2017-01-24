@@ -1,9 +1,9 @@
 //Ques 2- By gender manipulation 
 
-package com.knoldus.collectionAssignments
+//package com.knoldus.collectionAssignments
 
 
-import com.knoldus.ManipulationOnStudentMarks._
+//import com.knoldus.ManipulationOnStudentMarks._
 
 case class Student(id: Long, name: String,gen:gender.Value)
 
@@ -18,14 +18,47 @@ object gender extends Enumeration
 class ManipulationGender(sourceStudent:List[Student],sourceMarks:List[List[List[Marks]]])
 {
   
-	/*def getScoreByGender(maleList:List[Any],femaleList:List[Any])=
+	def getScoreByGender(maleList:List[ScoreCard],femaleList:List[ScoreCard])=
 	{
 		val getByPercent=for{
 				check<-0 until maleList.size
-			}yield if(maleList(check).percentage>=50) maleList(check) else 0 
-		val wantedMaleList=getByPercent.toList.filter{_!=0}
-		println(wantedMaleList)
-	}*/
+			}yield if(maleList(check).percentage>=50) maleList(check) else ScoreCard(0l,Map(0l->5f),40) 
+		val wantedMaleList=getByPercent.toList.filter{_.studentId!=0}
+		val idList=wantedMaleList map(x=>x.studentId)
+		val name=for{
+				check<-0 until idList.size
+			}yield getName(idList(check))
+		val nameList=name.toList.flatMap(_.filter(_!="0"))
+		println("All males who scored above 50%")
+		val notForUse=for{
+			check<-0 until idList.size
+		}yield printNames(nameList(check),idList(check))
+
+		val getPercent=for{
+				check<-0 until femaleList.size
+			}yield if(femaleList(check).percentage>=50) femaleList(check) else ScoreCard(0l,Map(0l->5f),40) 
+		val wantedFemaleList=getPercent.toList.filter{_.studentId!=0}
+		val idsList=wantedFemaleList map(x=>x.studentId)
+		val names=for{
+				check<-0 until idsList.size
+			}yield getName(idsList(check))
+		val namesList=names.toList.flatMap(_.filter(_!="0"))
+		println("All females who scored above 50%")
+		val notforUse=for{
+			check<-0 until idsList.size
+		}yield printNames(namesList(check),idsList(check))
+	}
+	def  printNames(name:String,id:Long)=
+	{
+		println("Name is "+name+" id is "+id)
+	}
+	def getName(id:Long)=
+	{
+		val result=for{
+			check<-0 until sourceStudent.size	
+		}yield if(id==sourceStudent(check).id)sourceStudent(check).name else"0"
+		result.toList 
+	}
 	def getScorecardByGender(source:List[Map[String,ScoreCard]]):(List[ScoreCard],List[ScoreCard])=
 	{
 		val (male,female)=sourceStudent partition(x=>x.gen==gender.male)
@@ -494,9 +527,9 @@ object DataProvider_2
 		val list_map=obj.generateMap()
 
 		val(maleList,femaleList)=obj.getScorecardByGender(list_map)
-		println(maleList)
-		println(femaleList)
-		//obj.getScoreByGender(maleList,femaleList)
+		//println(maleList)
+		//println(femaleList)
+		obj.getScoreByGender(maleList,femaleList)
 	}
   
 }
