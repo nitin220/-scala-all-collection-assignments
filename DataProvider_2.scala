@@ -18,7 +18,15 @@ object gender extends Enumeration
 class ManipulationGender(sourceStudent:List[Student],sourceMarks:List[List[List[Marks]]])
 {
   
-	def getScorecardByGender(source:List[Map[String,ScoreCard]]):(List[Any],List[Any])=
+	/*def getScoreByGender(maleList:List[Any],femaleList:List[Any])=
+	{
+		val getByPercent=for{
+				check<-0 until maleList.size
+			}yield if(maleList(check).percentage>=50) maleList(check) else 0 
+		val wantedMaleList=getByPercent.toList.filter{_!=0}
+		println(wantedMaleList)
+	}*/
+	def getScorecardByGender(source:List[Map[String,ScoreCard]]):(List[ScoreCard],List[ScoreCard])=
 	{
 		val (male,female)=sourceStudent partition(x=>x.gen==gender.male)
 		val scoreList=source.map(_.map(x=>x._2))
@@ -28,19 +36,19 @@ class ManipulationGender(sourceStudent:List[Student],sourceMarks:List[List[List[
 			}yield scoreFilter(male(check).id,onlyScorelist)
 		val findList=find.toList
 		val flatFindList=findList.flatMap(_ map(x=>x))
-		val maleList=flatFindList.filter{_!=0}
+		val maleList=flatFindList.filter{_.studentId!=0}
 		val findfemale=for{
 				check<-0 until female.size
 			}yield scoreFilter(female(check).id,onlyScorelist)
 		val findfemaleList=findfemale.toList.flatMap(_.map(x=>x))
-		val femaleList=findfemaleList.filter{_!=0}
+		val femaleList=findfemaleList.filter{_.studentId!=0}
 		(maleList,femaleList)
 	}
 	def scoreFilter(id:Long,source:List[ScoreCard])=
 	{
 		val result=for{
 				check<-0 until source.size
-			} yield if(id==source(check).studentId) source(check) 0
+			} yield if(id==source(check).studentId) source(check) else ScoreCard(0l,Map(0l->5f),40)
 		 result.toList
 	}
 	def search(name:String,map:Map[String,ScoreCard])=
@@ -486,6 +494,9 @@ object DataProvider_2
 		val list_map=obj.generateMap()
 
 		val(maleList,femaleList)=obj.getScorecardByGender(list_map)
+		println(maleList)
+		println(femaleList)
+		//obj.getScoreByGender(maleList,femaleList)
 	}
   
 }
