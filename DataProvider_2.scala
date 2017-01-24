@@ -1,7 +1,9 @@
-//package com.knoldus.collectionAssignments
+//Ques 2- By gender manipulation 
+
+package com.knoldus.collectionAssignments
 
 
-//import com.knoldus.ManipulationOnStudentMarks._
+import com.knoldus.ManipulationOnStudentMarks._
 
 case class Student(id: Long, name: String,gen:gender.Value)
 
@@ -16,16 +18,30 @@ object gender extends Enumeration
 class ManipulationGender(sourceStudent:List[Student],sourceMarks:List[List[List[Marks]]])
 {
   
-	def getScorecardByGender(source:List[Map[String,ScoreCard]])=
+	def getScorecardByGender(source:List[Map[String,ScoreCard]]):(List[Any],List[Any])=
 	{
 		val (male,female)=sourceStudent partition(x=>x.gen==gender.male)
 		val scoreList=source.map(_.map(x=>x._2))
 		val onlyScorelist=scoreList.flatMap(_.map(x=>x))
-		//println(onlyScorelist)
-		val f=for{
+		val find=for{
 				check<-0 until male.size
-			}yield if(male(check).id==onlyScorelist(check).studentId) onlyScorelist(check)
-		println(f) 
+			}yield scoreFilter(male(check).id,onlyScorelist)
+		val findList=find.toList
+		val flatFindList=findList.flatMap(_ map(x=>x))
+		val maleList=flatFindList.filter{_!=0}
+		val findfemale=for{
+				check<-0 until female.size
+			}yield scoreFilter(female(check).id,onlyScorelist)
+		val findfemaleList=findfemale.toList.flatMap(_.map(x=>x))
+		val femaleList=findfemaleList.filter{_!=0}
+		(maleList,femaleList)
+	}
+	def scoreFilter(id:Long,source:List[ScoreCard])=
+	{
+		val result=for{
+				check<-0 until source.size
+			} yield if(id==source(check).studentId) source(check) 0
+		 result.toList
 	}
 	def search(name:String,map:Map[String,ScoreCard])=
     
@@ -469,9 +485,7 @@ object DataProvider_2
       
 		val list_map=obj.generateMap()
 
-		//println(list_map)
-		//println(student_list)
-		obj.getScorecardByGender(list_map) 
+		val(maleList,femaleList)=obj.getScorecardByGender(list_map)
 	}
   
 }

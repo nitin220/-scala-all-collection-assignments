@@ -1,7 +1,9 @@
-//package com.knoldus.collectionAssignments
+/*Ques1 Scorecard manipulation*/
+
+package com.knoldus.collectionAssignments
 
 
-//import com.knoldus.ManipulationOnStudentMarks._
+import cm.knoldus.ManipulationOnStudentMarks._
 
 case class Student(id: Long, name: String)
 
